@@ -5,17 +5,17 @@ namespace AppWatch
 {
     public partial class MainWindow : Form
     {
-        private ProcessView processView = new();
+        private RunningProcessView processView = new();
 
         public MainWindow()
         {
             InitializeComponent();
-            processView.UpdateProcesses(dataGridViewProcesses);
+            processView.UpdateUserProcesses(dataGridViewProcesses);
         }
 
         private void buttonAddProcess_Click(object sender, EventArgs e)
         {
-            processView.UpdateProcesses(dataGridViewProcesses);
+            processView.UpdateUserProcesses(dataGridViewProcesses);
 
             SelectProcess selectProcessForm = new SelectProcess();
             selectProcessForm.Show();

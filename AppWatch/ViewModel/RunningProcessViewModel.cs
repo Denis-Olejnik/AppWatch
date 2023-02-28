@@ -2,26 +2,26 @@
 using System.ComponentModel;
 using System.Configuration;
 using System.Data.SqlClient;
-using Process = AppWatch.Model.Process; // This doesn't look very cool. TODO: Fix it?
+using RunningProcess = AppWatch.Model.RunningProcess; // This doesn't look very cool. TODO: Fix it?
 
 namespace AppWatch.ViewModel
 {
-    internal class ProcessViewModel : INotifyPropertyChanged
+    internal class RunningProcessViewModel : INotifyPropertyChanged
     {
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["Database"].ConnectionString;
-        private readonly ProcessDataContext dataContext;
-        private List<Process> processes;
+        private readonly RunningProcessDataContext dataContext;
+        private List<RunningProcess> processes;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ProcessViewModel()
+        public RunningProcessViewModel()
         {
             using SqlConnection connection = new SqlConnection(connectionString);
-            dataContext = new ProcessDataContext();
+            dataContext = new RunningProcessDataContext();
             processes = dataContext.GetProcesses();
         }
 
-        public List<Process> Processes
+        public List<RunningProcess> Processes
         {
             get { return processes; }
             set
@@ -34,12 +34,12 @@ namespace AppWatch.ViewModel
             }
         }
 
-        public void AddProcess(Process process)
+        public void AddProcess(RunningProcess process)
         {
             dataContext.AddProcess(process);
             Processes = dataContext.GetProcesses();
 
-            MessageBox.Show($"{process.Path}", "Process added!");
+            MessageBox.Show($"{process.Path}", "RunningProcess added!");
         }
 
         public void DeleteProcess(int id)

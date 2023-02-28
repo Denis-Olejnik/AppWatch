@@ -1,4 +1,5 @@
 ﻿using AppWatch.Model;
+using AppWatch.ViewModel;
 using System.Diagnostics;
 
 
@@ -12,7 +13,7 @@ namespace AppWatch
             GetListOSProcesses();
         }
 
-        private List<System.Diagnostics.Process> processesList = new();
+        private List<Process> processesList = new();
 
         public void GetListOSProcesses()
         {
@@ -21,9 +22,9 @@ namespace AppWatch
             {
                 dataGridViewOSProcesses.Rows.Clear();
                 
-                //TODO: Rename the class. "Process" - system class
-                System.Diagnostics.Process[] processes = System.Diagnostics.Process.GetProcesses();
-                foreach (System.Diagnostics.Process process in processes)
+                //TODO: Rename the class. "RunningProcess" - system class
+                Process[] processes = Process.GetProcesses();
+                foreach (Process process in processes)
                 {
                     if (string.IsNullOrEmpty(process.MainWindowTitle)) continue;
 
@@ -47,8 +48,8 @@ namespace AppWatch
 
         private void buttonSubmitSelected_Click(object sender, EventArgs e)
         {
-            AppWatch.Model.Process process = new Model.Process();
-            AppWatch.ViewModel.ProcessViewModel processViewModel = new AppWatch.ViewModel.ProcessViewModel();
+            RunningProcess process = new();
+            RunningProcessViewModel processViewModel = new();
 
             foreach (DataGridViewRow row in dataGridViewOSProcesses.SelectedRows)
             {

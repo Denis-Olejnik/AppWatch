@@ -3,11 +3,11 @@ using System.Data.SqlClient;
 
 namespace AppWatch.Model
 {
-    internal class ProcessDataContext
+    internal class RunningProcessDataContext
     {
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["Database"].ConnectionString;
         
-        public List<Process> GetProcesses()
+        public List<RunningProcess> GetProcesses()
         {
             using SqlConnection connection = new SqlConnection(connectionString);
 
@@ -16,10 +16,10 @@ namespace AppWatch.Model
             SqlCommand command = new SqlCommand("SELECT Title, Executable, Path, CommandLine FROM Processes", connection);
             using (SqlDataReader reader = command.ExecuteReader())
             {
-                var processes = new List<Process>();
+                var processes = new List<RunningProcess>();
                 while (reader.Read())
                 {
-                    processes.Add(new Process
+                    processes.Add(new RunningProcess
                     {
                         Title = (string)reader["Title"],
                         Executable = (string)reader["Executable"],
@@ -32,21 +32,23 @@ namespace AppWatch.Model
         }
 
         /// <summary>
-        /// Writing an object of class "Process" to the database
+        /// Writing an object of class "RunningProcess" to the database
         /// </summary>
         /// <param name="process">Object with parameters such as: @Title, @Executable, @Path, @CommandLine</param>
-        public void AddProcess(Process process)
+        public void AddProcess(RunningProcess process)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
 
-                SqlCommand command = new SqlCommand("INSERT INTO Processes VALUES (N'" + process.Title + "', " +
-                    "@Executable, N'" + process.Path + "', @CommandLine)", connection);
+                SqlCommand command = new SqlCommand("INSERT INTO Processes (Title, Executable, Path, CommandLine) " +
+                    "VALUES (@Title, @Executable, @Path, @CommandLine)", connection);
+                command.Parameters.AddWithValue("@Title", process.Title);
                 command.Parameters.AddWithValue("@Executable", process.Executable);
+                command.Parameters.AddWithValue("@Path", process.Path);
                 command.Parameters.AddWithValue("@CommandLine", process.CommandLine);
-
                 command.ExecuteNonQuery();
+
             }
         }
 
