@@ -1,35 +1,30 @@
 using AppWatch.View;
-using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace AppWatch
 {
+    
     public partial class MainWindow : Form
     {
-        private RunningProcessView processView = new();
+        private readonly ILogger<MainWindow> _logger;
 
-        public MainWindow()
+        private TrackedProcessView processView = new();
+
+        public MainWindow(ILogger<MainWindow> logger)
         {
+            _logger = logger;
             InitializeComponent();
-            processView.UpdateUserProcesses(dataGridViewProcesses);
+
+            _logger.LogInformation("Program started!");
+            processView.UpdateTrackedProcesses(dataGridViewProcesses);
         }
 
         private void buttonAddProcess_Click(object sender, EventArgs e)
         {
-            processView.UpdateUserProcesses(dataGridViewProcesses);
+            processView.UpdateTrackedProcesses(dataGridViewProcesses);
 
-            SelectProcess selectProcessForm = new SelectProcess();
+            SelectProcess selectProcessForm = new(_logger);
             selectProcessForm.Show();
-        }
-
-        private void dataGridViewProcesses_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            var senderGrid = (DataGridView)sender;
-
-            if (senderGrid.Columns[e.ColumnIndex] is DataGridViewButtonColumn &&
-                e.RowIndex >= 0)
-            {
-                Debug.WriteLine($"Try to remove: {senderGrid.SelectedRows[0].Cells[0].Value}");
-            }
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace AppWatch.Model
 {
-    internal class RunningProcess
+    internal class TrackedProcess
     {
         public string? Title { get; set; }
         public string? Executable { get; set; }

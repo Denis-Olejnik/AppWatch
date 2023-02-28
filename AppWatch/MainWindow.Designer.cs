@@ -118,7 +118,6 @@
             this.dataGridViewProcesses.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewProcesses.Size = new System.Drawing.Size(864, 390);
             this.dataGridViewProcesses.TabIndex = 0;
-            this.dataGridViewProcesses.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewProcesses_CellContentClick);
             // 
             // colTitle
             // 

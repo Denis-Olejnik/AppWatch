@@ -3,11 +3,11 @@ using System.Data.SqlClient;
 
 namespace AppWatch.Model
 {
-    internal class RunningProcessDataContext
+    internal class TrackedProcessDataContext
     {
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["Database"].ConnectionString;
         
-        public List<RunningProcess> GetProcesses()
+        public List<TrackedProcess> GetProcesses()
         {
             using SqlConnection connection = new SqlConnection(connectionString);
 
@@ -16,10 +16,10 @@ namespace AppWatch.Model
             SqlCommand command = new SqlCommand("SELECT Title, Executable, Path, CommandLine FROM Processes", connection);
             using (SqlDataReader reader = command.ExecuteReader())
             {
-                var processes = new List<RunningProcess>();
+                var processes = new List<TrackedProcess>();
                 while (reader.Read())
                 {
-                    processes.Add(new RunningProcess
+                    processes.Add(new TrackedProcess
                     {
                         Title = (string)reader["Title"],
                         Executable = (string)reader["Executable"],
@@ -32,10 +32,10 @@ namespace AppWatch.Model
         }
 
         /// <summary>
-        /// Writing an object of class "RunningProcess" to the database
+        /// Writing an object of class "TrackedProcess" to the database
         /// </summary>
         /// <param name="process">Object with parameters such as: @Title, @Executable, @Path, @CommandLine</param>
-        public void AddProcess(RunningProcess process)
+        public void AddProcess(TrackedProcess process)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
             {

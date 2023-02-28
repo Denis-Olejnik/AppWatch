@@ -1,5 +1,6 @@
 ﻿using AppWatch.Model;
 using AppWatch.ViewModel;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 
@@ -7,9 +8,13 @@ namespace AppWatch
 {
     public partial class SelectProcess : Form
     {
-        public SelectProcess()
+        private readonly ILogger _logger;
+
+        public SelectProcess(ILogger logger)
         {
             InitializeComponent();
+            
+            _logger = logger;
             GetListOSProcesses();
         }
 
@@ -21,35 +26,32 @@ namespace AppWatch
             try
             {
                 dataGridViewOSProcesses.Rows.Clear();
-                
-                //TODO: Rename the class. "RunningProcess" - system class
-                Process[] processes = Process.GetProcesses();
-                foreach (Process process in processes)
-                {
-                    if (string.IsNullOrEmpty(process.MainWindowTitle)) continue;
 
-                    _processName = process.ProcessName;
-                    dataGridViewOSProcesses.Rows.Add(process.MainWindowTitle, Path.GetFileName(process.MainModule.FileName));
-                    
-                    processesList.Add(process);
+                Process[] processes = Process.GetProcesses();
+                foreach (Process item in processes)
+                {
+                    if (string.IsNullOrEmpty(item.MainWindowTitle)) continue;
+
+                    _processName = item.ProcessName;
+                    dataGridViewOSProcesses.Rows.Add(item.MainWindowTitle, Path.GetFileName(item.MainModule.FileName));
+
+                    processesList.Add(item);
                 }
-            }
-            catch (System.ComponentModel.Win32Exception exception)
-            {
-                MessageBox.Show($"Пропущено: \"{_processName}.exe\" - недостаточно прав." +
-                    $"\n\nТребуется запуск с правами Администратора.", 
-                    $"{_processName}.exe: {exception.Message}", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception exception)
             {
+                _logger.LogError(exception, exception.Message);
                 MessageBox.Show(exception.StackTrace, exception.Message, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
+        /// <summary>
+        /// Save selected processes in the database
+        /// </summary>
         private void buttonSubmitSelected_Click(object sender, EventArgs e)
         {
-            RunningProcess process = new();
-            RunningProcessViewModel processViewModel = new();
+            TrackedProcess process = new();
+            TrackedProcessViewModel processViewModel = new();
 
             foreach (DataGridViewRow row in dataGridViewOSProcesses.SelectedRows)
             {
@@ -59,7 +61,7 @@ namespace AppWatch
                 process.Title = processesList[row.Index].MainWindowTitle;
                 process.Executable = processExecutable;
                 process.Path = processPath;
-                //process.CommandLine = processesList[row.Index].StartInfo.Arguments;
+                //item.CommandLine = processesList[row.Index].StartInfo.Arguments;
                 process.CommandLine = "${process_args}";
 
                 processViewModel.AddProcess(process);

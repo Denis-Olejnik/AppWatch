@@ -2,16 +2,16 @@
 
 namespace AppWatch.View
 {
-    internal class RunningProcessView
+    internal class TrackedProcessView
     {
-        private readonly RunningProcessViewModel _viewModel;
+        private readonly TrackedProcessViewModel _viewModel;
 
-        public RunningProcessView()
+        public TrackedProcessView()
         {
-            _viewModel = new RunningProcessViewModel();
+            _viewModel = new TrackedProcessViewModel();
         }
 
-        public void UpdateUserProcesses(DataGridView dataGridView)
+        public void UpdateTrackedProcesses(DataGridView dataGridView)
         {
             dataGridView.Rows.Clear();
             foreach (var process in _viewModel.Processes)

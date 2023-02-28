@@ -1,27 +1,31 @@
 ﻿using AppWatch.Model;
+using Microsoft.Extensions.Logging;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data.SqlClient;
-using RunningProcess = AppWatch.Model.RunningProcess; // This doesn't look very cool. TODO: Fix it?
+using System.Diagnostics;
+using Serilog;
 
 namespace AppWatch.ViewModel
 {
-    internal class RunningProcessViewModel : INotifyPropertyChanged
+    internal class TrackedProcessViewModel : INotifyPropertyChanged
     {
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["Database"].ConnectionString;
-        private readonly RunningProcessDataContext dataContext;
-        private List<RunningProcess> processes;
+        private static readonly Serilog.ILogger logger = Log.ForContext<TrackedProcessViewModel>();
+
+        private readonly TrackedProcessDataContext dataContext;
+        private List<TrackedProcess> processes;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public RunningProcessViewModel()
+        public TrackedProcessViewModel()
         {
             using SqlConnection connection = new SqlConnection(connectionString);
-            dataContext = new RunningProcessDataContext();
+            dataContext = new TrackedProcessDataContext();
             processes = dataContext.GetProcesses();
         }
 
-        public List<RunningProcess> Processes
+        public List<TrackedProcess> Processes
         {
             get { return processes; }
             set
@@ -34,12 +38,11 @@ namespace AppWatch.ViewModel
             }
         }
 
-        public void AddProcess(RunningProcess process)
+        public void AddProcess(TrackedProcess process)
         {
             dataContext.AddProcess(process);
             Processes = dataContext.GetProcesses();
-
-            MessageBox.Show($"{process.Path}", "RunningProcess added!");
+            logger.Debug("Added new process: {@Process}", process);
         }
 
         public void DeleteProcess(int id)
