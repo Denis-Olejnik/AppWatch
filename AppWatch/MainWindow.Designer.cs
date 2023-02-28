@@ -118,6 +118,7 @@
             this.dataGridViewProcesses.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewProcesses.Size = new System.Drawing.Size(864, 390);
             this.dataGridViewProcesses.TabIndex = 0;
+            this.dataGridViewProcesses.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewProcesses_CellContentClick);
             // 
             // colTitle
             // 
@@ -157,6 +158,7 @@
             this.colEdit.ReadOnly = true;
             this.colEdit.Text = "Delete";
             this.colEdit.ToolTipText = "Delete";
+            this.colEdit.UseColumnTextForButtonValue = true;
             // 
             // buttonAddProcess
             // 
@@ -215,11 +217,11 @@
         private TabPage tabPageAbout;
         private DataGridView dataGridViewProcesses;
         private TableLayoutPanel tableLayoutPanelProcesses;
+        private Button buttonAddProcess;
         private DataGridViewTextBoxColumn colTitle;
         private DataGridViewTextBoxColumn colExecutable;
         private DataGridViewTextBoxColumn colCommandLine;
         private DataGridViewTextBoxColumn colPath;
         private DataGridViewButtonColumn colEdit;
-        private Button buttonAddProcess;
     }
 }

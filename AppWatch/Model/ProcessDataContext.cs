@@ -41,15 +41,15 @@ namespace AppWatch.Model
             {
                 connection.Open();
 
-                SqlCommand command = new SqlCommand("INSERT INTO Processes VALUES (@Title, @Executable, @Path, @CommandLine)", connection);
-                command.Parameters.AddWithValue("@Title", process.Title);
+                SqlCommand command = new SqlCommand("INSERT INTO Processes VALUES (N'" + process.Title + "', " +
+                    "@Executable, N'" + process.Path + "', @CommandLine)", connection);
                 command.Parameters.AddWithValue("@Executable", process.Executable);
-                command.Parameters.AddWithValue("@Path", process.Path);
                 command.Parameters.AddWithValue("@CommandLine", process.CommandLine);
 
                 command.ExecuteNonQuery();
             }
         }
+
 
         public void DeleteProcess(int id)
         {

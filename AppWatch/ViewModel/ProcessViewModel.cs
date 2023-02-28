@@ -38,6 +38,8 @@ namespace AppWatch.ViewModel
         {
             dataContext.AddProcess(process);
             Processes = dataContext.GetProcesses();
+
+            MessageBox.Show($"{process.Path}", "Process added!");
         }
 
         public void DeleteProcess(int id)
